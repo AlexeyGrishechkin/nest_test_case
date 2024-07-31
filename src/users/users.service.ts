@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { User } from './types/users.types';
-import { QueryParams } from './types/query.types';
+import { FilterTypes } from './types/filter.types';
 
 @Injectable()
 export class UsersService {
@@ -10,28 +10,14 @@ export class UsersService {
     { id: 3, name: 'Jack', email: 'jack@example.com', age: 35 },
   ];
 
-  getUsers(query: QueryParams): Partial<User>[] {
-    let filteredUsers = this.usersRepository;
+  getUsers(filter: FilterTypes): Partial<User>[] {
+    return this.usersRepository.filter((user) => {
+      for (const key in filter) {
+        if (user[key] !== filter[key]) return false;
+      }
 
-    if (query.name) {
-      filteredUsers = filteredUsers.filter((user) =>
-        user.name.includes(query.name),
-      );
-    }
-
-    if (query.age) {
-      filteredUsers = filteredUsers.filter(
-        (user) => user.age === Number(query.age),
-      );
-    }
-
-    if (query.email) {
-      filteredUsers = filteredUsers.filter(
-        (user) => user.email === query.email,
-      );
-    }
-
-    return filteredUsers;
+      return true;
+    });
   }
 
   async createUser(name: string, email: string, age: number): Promise<string> {
