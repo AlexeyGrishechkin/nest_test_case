@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { ConflictException, Injectable } from '@nestjs/common';
 import { User } from './types/users.types';
 import { FilterTypes } from './types/filter.types';
 
@@ -26,7 +26,9 @@ export class UsersService {
     );
 
     if (userIsAlreadyExist) {
-      throw new Error('User already exists');
+      throw new ConflictException(
+        'User with the provided email already exists.',
+      );
     }
 
     const user = { id: Date.now(), name, email, age };

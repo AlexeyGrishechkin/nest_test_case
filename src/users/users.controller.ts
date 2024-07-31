@@ -16,7 +16,7 @@ export class UsersController {
     return this.usersService.getUsers(filter);
   }
 
-  @Post('/create')
+  @Post()
   createUser(@Body() { name, email, age }: CreateUserDto): Promise<string> {
     return this.usersService.createUser(name, email, age);
   }
